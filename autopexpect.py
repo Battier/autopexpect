@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+# coding: utf8
+# -*- coding: utf-8 -*-
 import pexpect
 import sys
 import string
@@ -18,18 +20,18 @@ def input_filter(c):
 			sendcmd(userbuf,elapsed_time)
 			userbuf = ''
 		else:
-			userbuf+=c
+			userbuf+=c.decode()
 	else:
 		pass
 		#userbuf+=c
 	if userbuf != '':
-		sys.stdout.write(c)
+		sys.stdout.write(c.decode())
 	return c
 
 
 def output_filter(o):
 	global outputbuf
-	outputbuf+=o
+	outputbuf+=o.decode()
 	# Newline detected
 	if userbuf=='' and outputbuf!='':
 		outputbuf_list = outputbuf.split('\n')
@@ -76,14 +78,14 @@ elapsed_time = 0
 # Script starts
 fd = open(filename,'w')
 os.chmod(filename,stat.S_IRWXU)
-cmd('#!/usr/bin/env python')
+cmd('#!/usr/bin/env python3')
 cmd('# -*- coding: utf-8 -*-')
 cmd('import pexpect')
 cmd('import sys')
 cmd('import os')
 cmd('import time')
 cmd("""child=pexpect.spawn('/bin/bash')""")
-cmd("""child.logfile=sys.stdout""")
+cmd("""child.logfile=sys.stdout.buffer""")
 
 
 child = pexpect.spawn('/bin/bash')
@@ -93,8 +95,8 @@ start_time = time.time()
 child.interact(input_filter=input_filter,output_filter=output_filter)
 # Finish with a return.
 sendcmd('',0)
-cmd('print "autopexpect script complete"')
+cmd('print ("autopexpect script complete")')
 child.close()
-print '\r\nScript written to: ' + filename
-print '\r\nRun it with: ./' + filename
+print ('\r\nScript written to: ' + filename)
+print ('\r\nRun it with: ./' + filename)
 
